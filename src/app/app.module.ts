@@ -11,6 +11,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { ProductComponent } from './product/product.component';
 import { BsModalModule } from 'ng2-bs3-modal';
 import { ReactiveFormsModule } from '@angular/forms';  
+import { ToastrModule } from 'ngx-toastr';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 
 
@@ -25,6 +27,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     BrowserModule, 
     HttpClientModule,
     ReactiveFormsModule,
+    BrowserAnimationsModule,
     RouterModule.forRoot([  
 
       {path: 'home' ,component:HomeComponent},
@@ -32,7 +35,8 @@ import { ReactiveFormsModule } from '@angular/forms';
       // { path: '404', component : NotFoundComponent},
       { path: '', redirectTo: '/home', pathMatch: 'full' }
     ]),
-    HttpModule,BsModalModule
+    HttpModule,BsModalModule,
+    ToastrModule.forRoot()
   ],
   providers: [DataService,EnvironmentUrlService],
   bootstrap: [AppComponent]

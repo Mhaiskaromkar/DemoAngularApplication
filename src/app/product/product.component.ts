@@ -1,10 +1,12 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { RepositoryService } from '../shared/services/repository.service';
-import { ProductCategory } from '../_interfaces/ProductCategory.model';
+
 import { HttpClientModule } from '@angular/common/http';
-import { FormGroup, Validators, FormBuilder } from '@angular/forms';
+import { FormGroup, Validators, FormBuilder, NgForm } from '@angular/forms';
+import { productcategory } from '../_interfaces/ProductCategory.model';
+import { RepositoryService } from '../shared/services/repository.service';
 import { DBOperation } from '../shared/services/enum';
 import { BsModalComponent } from 'ng2-bs3-modal';
+import { ToastrService } from 'ngx-toastr'
 
 
 
@@ -17,7 +19,7 @@ export class ProductComponent implements OnInit {
   @ViewChild('modal') modal: BsModalComponent; 
 
 
-  public ProductCategories: ProductCategory[];
+  public ProductCategories: productcategory[];
   indLoading: boolean = false;  
 //   productcategoryfrm: FormGroup;  
 
@@ -26,17 +28,21 @@ ProdCateForm: FormGroup;
   modalTitle: string;  
   modalBtnTitle: string; 
   msg: string;   
-  ProductCategory: ProductCategory;  
-   constructor(private fb: FormBuilder, private repository: RepositoryService) { }
+  productcategory: productcategory;  
+
+ 
+
+   constructor(private fb: FormBuilder, private repository: RepositoryService, private toastr: ToastrService) { }
 
   ngOnInit() {
     
     this.ProdCateForm = this.fb.group({  
-      producttype: [''],  
+        categoryId:[0], 
+        productType: [''],  
+        updatedBy: [''],  
       description: [''] ,
-      updatedby: [''],  
-    //   lastupdatedate: [],  
-    //   isactive: [''],
+      lastUpdatedDate: [],  
+      isActive: [''],
   });  
     this.getAllProductCategory();
   }
@@ -46,13 +52,24 @@ ProdCateForm: FormGroup;
     let apiAddress: string = "api/prodCategory";
     this.repository.getData(apiAddress)
     .subscribe(res => {
-      this.ProductCategories = res as ProductCategory[];
+      this.ProductCategories = res as productcategory[];
 
+      // initialize to page 1
+    // this.setPage(1);
        this.indLoading = false; 
-     console.log(JSON.stringify(res));
+     
+     
     //this.repository.getData(apiAddress).subscribe(result => { this.ProductCategories =result as ProductCategory[]
     });
   } 
+
+//   setPage(page: number) {
+//     // get pager object from service
+//     this.pager = this.pagerService.getPager(this.ProductCategories.length, page);
+
+//     // get current page of items
+//     this.pagedItems = this.ProductCategories.slice(this.pager.startIndex, this.pager.endIndex + 1);
+// }
 
 
   addproductcategory() {  
@@ -64,84 +81,80 @@ ProdCateForm: FormGroup;
     this.modal.open();
 }  
 
-editproductcategory(categoryId: number) {
-    console.log(categoryId);
+editproductcategory(categoryId) {
   this.dbops = DBOperation.update;
+  this.ProdCateForm.reset(); 
   this.SetControlsState(true);
   this.modalTitle = "Edit User";
   this.modalBtnTitle = "Update";
-  //this.ProductCategory = this.ProductCategories.filter(x => x.categoryId == id)[0];
-
-  let apiAddress: string = "api/prodCategory/ ${categoryId} ";
-  this.repository.getData(apiAddress)
-  .subscribe(res => {
-    this.ProductCategory = res as ProductCategory;
-
-     this.indLoading = false; 
-   console.log(JSON.stringify(res));
-  //this.repository.getData(apiAddress).subscribe(result => { this.ProductCategories =result as ProductCategory[]
-  });
-
-
-  this.ProdCateForm.setValue(this.ProductCategory);
+  this.productcategory = this.ProductCategories.filter(x => x.categoryId == categoryId)[0];
+  this.ProdCateForm.setValue(this.productcategory);
   this.modal.open();
 }
 
-onSubmit(ProdCateForm : any) {
+deleteproductcategory(categoryId) {  
+    this.dbops = DBOperation.delete;  
+    this.SetControlsState(false);  
+    this.modalTitle = "Confirm to Delete?";  
+    this.modalBtnTitle = "Delete";  
+    this.productcategory = this.ProductCategories.filter(x => x.categoryId == categoryId)[0];
+    this.ProdCateForm.setValue(this.productcategory);  
+    this.modal.open();  
+}  
+
+resetForm(form?: NgForm) {
+    if (form != null)
+      form.reset();
+    
+  }
+
+onSubmit(ProdCatForm) {
       
   this.msg = "";  
   let apiAddress: string ;
   switch (this.dbops) {  
       case DBOperation.create:      
-      apiAddress= "api/prodCategory/Create";
-      console.log(ProdCateForm);
-     console.log( this.ProdCateForm.value);
+      apiAddress= "api/prodCategory";
+   
       this.repository.create(apiAddress, this.ProdCateForm.value).subscribe(data => {  
-          
-        if (data == 1) //Success    
-              {  
-                  console.log(data);
-                  this.msg = "Data successfully added.";  
-                  this.getAllProductCategory();  
-              } else { 
-                console.log(data); 
-                  this.msg = "There is some issue in saving records, please contact to system administrator!"  
-              }  
-              this.modal.dismiss();  
+          console.log(data);
+         
+          //this.ProdCatForm.reset();
+            this.getAllProductCategory();  
+            this.toastr.success('New Record Added Succcessfully', 'Product Added');
+            this.modal.dismiss();
           }, error => {  
-              this.msg = error;  
+            this.toastr.error('There is some issue in saving records, please contact to system administrator!', 'Product Added');
           });  
           break;  
       case DBOperation.update:  
-      apiAddress= "api/prodCategory/Put";
-          this.repository.update(apiAddress,  this.ProdCateForm.value).subscribe(data => {  
-              if (data == 1) //Success    
-              {  
-                  this.msg = "Data successfully updated.";  
-                  this.getAllProductCategory();  
-              } else {  
-                  this.msg = "There is some issue in saving records, please contact to system administrator!"  
-              }  
-              this.modal.dismiss();  
+      apiAddress= "api/prodCategory";
+      
+      console.log( this.ProdCateForm.value);
+
+          this.repository.create(apiAddress,  this.ProdCateForm.value).subscribe(data => {  
+            console.log(data);
+            //this.resetForm(this.ProdCateForm);
+            this.getAllProductCategory();  
+            this.toastr.success('Record Updated Succcessfully.', 'Product Updated');
+            this.modal.dismiss();
           }, error => {  
-              this.msg = error;  
-          });  
+            this.toastr.error('There is some issue in saving records, please contact to system administrator!', 'Product Updated');
+          });   
           break;  
       case DBOperation.delete: 
-      //apiAddress= "api/prodCategory/Delete";
+
       
-      apiAddress= "api/owner/";//+  this.productcategoryfrm.AlbumId;
+      apiAddress= "api/prodCategory/"+  this.ProdCateForm.value.categoryId
+      console.log(apiAddress);
           this.repository.delete(apiAddress).subscribe(data => {  
-              if (data == 1) //Success    
-              {  
-                  this.msg = "Data successfully deleted.";  
-                  this.getAllProductCategory();  
-              } else {  
-                  this.msg = "There is some issue in saving records, please contact to system administrator!"  
-              }  
-              this.modal.dismiss();  
+            console.log(data);
+            //this.resetForm(this.ProdCateForm);
+            this.getAllProductCategory();  
+            this.toastr.success('Record Deleted Succcessfully.', 'Product Deleted');
+            this.modal.dismiss();
           }, error => {  
-              this.msg = error;  
+            this.toastr.error('There is some issue in saving records, please contact to system administrator!', 'Product Deleted');
           });  
           break;  
   }  

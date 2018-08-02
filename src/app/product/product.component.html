@@ -40,13 +40,35 @@
                       <td>{{ ProductCategory.updatedBy }}</td>
                       <td>{{ ProductCategory.isActive }}</td>
                       <td>{{ ProductCategory.lastUpdatedDate   }}</td>
-                      <td><p data-placement="top" data-toggle="tooltip"  (click)="editproductcategory(ProductCategory.categoryid)" title="Edit"><button class="btn btn-primary btn-xs" data-title="Edit" data-toggle="modal" data-target="#edit" ><span class="glyphicon glyphicon-pencil"></span></button></p></td>
-                      <td><p data-placement="top" data-toggle="tooltip" (click)="deleteProductCategory(ProductCategory.categoryid)" title="Delete"><button class="btn btn-danger btn-xs" data-title="Delete" data-toggle="modal" data-target="#delete" ><span class="glyphicon glyphicon-trash"></span></button></p></td>
+                      <td>{{ ProductCategory.categoryId   }}</td>
+                      <td><p data-placement="top" data-toggle="tooltip"  (click)="editproductcategory(ProductCategory.categoryId)" title="Edit">
+                        <button class="btn btn-primary btn-xs" data-title="Edit" data-toggle="modal" data-target="#edit" ><span class="glyphicon glyphicon-pencil"></span></button></p>
+                      </td>
+                      <td><p data-placement="top" data-toggle="tooltip" (click)="deleteproductcategory(ProductCategory.categoryId)" title="Delete"><button class="btn btn-danger btn-xs" data-title="Delete" data-toggle="modal" data-target="#delete" ><span class="glyphicon glyphicon-trash"></span></button></p></td>
                       </tr>
 
                     </tbody>
         
               </table>
+
+              <!-- pager -->
+            <!--<ul *ngIf="pager.pages && pager.pages.length" class="pagination">
+              <li [ngClass]="{disabled:pager.currentPage === 1}">
+                  <a (click)="setPage(1)">First</a>
+              </li>
+              <li [ngClass]="{disabled:pager.currentPage === 1}">
+                  <a (click)="setPage(pager.currentPage - 1)">Previous</a>
+              </li>
+              <li *ngFor="let page of pager.pages" [ngClass]="{active:pager.currentPage === page}">
+                  <a (click)="setPage(page)">{{page}}</a>
+              </li>
+              <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                  <a (click)="setPage(pager.currentPage + 1)">Next</a>
+              </li>
+              <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                  <a (click)="setPage(pager.totalPages)">Last</a>
+              </li>
+          </ul>-->
 
               <div>
             </div>
@@ -66,7 +88,7 @@
  </div>
 
  <bs-modal #modal>
-    <form novalidate (ngSubmit)="onSubmit(ProdCateForm)" [formGroup]="ProdCateForm">
+    <form novalidate (ngSubmit)="onSubmit(ProdCateForm)" [formGroup]="ProdCateForm" >
       <bs-modal-header [showDismiss]="true">
         <h4 class="modal-title">{{modalTitle}}</h4>
       </bs-modal-header>
@@ -75,29 +97,36 @@
         <div class="form-group">
           <div>
             <span>ProductType</span>
-            <input type="text" class="form-control" placeholder="ProductType" formControlName="producttype" id="producttype"> 
+            <input type="text" class="form-control" placeholder="ProductType" formControlName="productType" id="productType"> 
           </div>
           <div>
             <span>Description</span>
             <input type="text" class="form-control" placeholder="Description" formControlName="description" id="description">
           </div>
-         
+          <div class="form-group"></div>
           <div>
                 <span>UpdatedBy</span>
-                <input type="text" class="form-control" placeholder="UpdatedBy" formcontrolName="updatedby" id="updatedby">
+                <!-- <input type="text" class="form-control" placeholder="UpdatedBy" formcontrolName="updatedby" id="updatedby"> -->
+
+                <input type="text" formControlName="updatedBy" placeholder="Updated By" name="updatedBy" class="form-control" id="updatedBy">
           </div>
-        </div>
-          <!-- <div>
+
+          <div>
                 <span>Updated date</span>
-                <input type="text" class="form-control"  ngbDatepicker placeholder="LastUpdatedDate" id="lastupdatedate" formcontrolName="lastupdatedate">
+                <!-- <input type="text" class="form-control"  placeholder="LastUpdatedDate" id="lastupdatedate" formcontrolName="lastupdatedate"> -->
+
+                <input type="text" formControlName="lastUpdatedDate" placeholder="Last Updated Date" name="lastUpdatedDate" class="form-control" id="lastUpdatedDate">
           </div>
         </div>
         <div class="form-group">
           <div>
                 <span>isActive</span>
-                <input type="checkbox" class="form-control" formcontrolName="isactive" id="isactive">
+                <!-- <input type="checkbox" class="form-control" formcontrolName="isactive" id="isactive"> -->
+
+    
+    <input type="checkbox" formControlName="isActive"  name="isactive" class="form-control" id="isActive">
           </div>
-        </div> -->
+        </div>
          
     
       </bs-modal-body>

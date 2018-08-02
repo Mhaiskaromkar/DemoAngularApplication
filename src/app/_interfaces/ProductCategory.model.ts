@@ -1,8 +1,8 @@
-export interface ProductCategory{
-    categoryid: number;
+export interface productcategory{
+    categoryId: number;
     productType: string;
     description : string;
-    updatedby: string;
-    lastupdateddate: Date;
-    isactive: boolean;  
+    updatedBy: string;
+    lastUpdatedDate: Date;
+    isActive: boolean;  
 }

@@ -14,16 +14,19 @@ export class RepositoryService {
   }
  
   public create(route: string, body) {
-    console.log(JSON.stringify(body));
-    
-    return this.http.post(this.createCompleteRoute(route, this.envUrl.urlAddress), body, this.generateHeaders());
+    console.log( JSON.stringify(body));
+
+    console.log(this.createCompleteRoute(route, this.envUrl.urlAddress))    
+    return this.http.post(this.createCompleteRoute(route, this.envUrl.urlAddress), JSON.stringify(body), this.generateHeaders());
   }
  
   public update(route: string, body){
-    return this.http.put(this.createCompleteRoute(route, this.envUrl.urlAddress), body, this.generateHeaders());
+    console.log( JSON.stringify(body));
+    return this.http.put(this.createCompleteRoute(route, this.envUrl.urlAddress),JSON.stringify(body), this.generateHeaders());
   }
  
   public delete(route: string){
+    console.log(this.createCompleteRoute(route, this.envUrl.urlAddress));
     return this.http.delete(this.createCompleteRoute(route, this.envUrl.urlAddress));
   }
  
