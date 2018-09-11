@@ -1,10 +1,11 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import { RouterModule } from '@angular/router';
 import { HttpModule } from '@angular/http'
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
-import { DataService } from './data.service'  
+
 import { MenuComponent } from './menu/menu.component';
 import { EnvironmentUrlService } from './shared/services/environment-url.service';
 import { HttpClientModule } from '@angular/common/http';
@@ -13,6 +14,8 @@ import { BsModalModule } from 'ng2-bs3-modal';
 import { ReactiveFormsModule } from '@angular/forms';  
 import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { AccountModule } from './account/account.module';
+
 
 
 
@@ -21,10 +24,12 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     AppComponent,
     HomeComponent,
     ProductComponent,
-    MenuComponent 
+    MenuComponent
+   
   ],
   imports: [
     BrowserModule, 
+    AccountModule,
     HttpClientModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
@@ -36,9 +41,11 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
       { path: '', redirectTo: '/home', pathMatch: 'full' }
     ]),
     HttpModule,BsModalModule,
+    NgbModule.forRoot(),
     ToastrModule.forRoot()
   ],
-  providers: [DataService,EnvironmentUrlService],
+  providers: [EnvironmentUrlService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
+
